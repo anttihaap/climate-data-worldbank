@@ -4,6 +4,7 @@ import { Col } from "react-bootstrap";
 
 import EmissionsYearRangeSelector from "./EmissionsYearRangeSelector";
 import EmissionsLineGraph from "./EmissionsLineGraph";
+import getYearRange from "../../yearRange";
 
 const PerCapitaCheckBox = ({ toggleShowPerCapita }) => {
   return (
@@ -19,9 +20,11 @@ const PerCapitaCheckBox = ({ toggleShowPerCapita }) => {
 class EmissionsDisplay extends React.Component {
   constructor(props) {
     super(props);
+
+    this.yearRange = getYearRange();
     this.state = {
-      fromYear: "1990",
-      toYear: "2017",
+      fromYear: this.yearRange[0],
+      toYear: this.yearRange[this.yearRange.length - 1],
       showPerCapita: false
     };
   }

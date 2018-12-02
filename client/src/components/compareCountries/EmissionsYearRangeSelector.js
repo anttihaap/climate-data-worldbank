@@ -6,10 +6,9 @@ import getYearRange from "../../yearRange";
 class EmissionsYearRangeSelector extends React.Component {
   constructor(props) {
     super(props);
-    this.yearRange = getYearRange();
     this.state = {
-      fromYear: this.yearRange[0],
-      toYear: this.yearRange[this.yearRange.length - 1],
+      fromYear: this.props.fromYear,
+      toYear: this.props.toYear,
       errorMessage: null
     };
   }
@@ -36,7 +35,7 @@ class EmissionsYearRangeSelector extends React.Component {
           <Col xs={2}>
             <FormControlSelector
               controlLabel={"from year"}
-              options={this.yearRange}
+              options={getYearRange()}
               onChange={e => {
                 this.setState(
                   { fromYear: e.target.value },
