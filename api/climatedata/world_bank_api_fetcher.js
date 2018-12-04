@@ -16,19 +16,27 @@ const allEmissionsAndGDPForYearApiUrl = (year, page) => {
   return `http://api.worldbank.org/v2/country/ALL/indicator/EN.ATM.CO2E.KT;EN.ATM.CO2E.PC;NY.GDP.MKTP.CD?source=2&date=${year}&format=json&page=${page}`
 }
 
-const fetchAllPages = async function(apiUrl, currentLastUpdatedDate) {
+const fetch = async url => {
+  try {
+    return await axios.get(url)
+  } catch (err) {
+    throw new Error('failed to fetch data from worldbank, fetch failed')
+  }
+}
+
+const fetchAllPages = async (apiUrl, currentLastUpdatedDate) => {
   let fetchedData = []
   let currentPage = 1
   while (true) {
-    const res = await axios.get(apiUrl(currentPage))
-    const resInfo = res.data[0]
+    const res = await fetch(apiUrl(currentPage))
 
-    if (res.status !== 200 || !resInfo.lastupdated) {
-      return {
-        status: 'error',
-        errorMessage: 'failed to fetch data from worldbank'
-      }
+    if (!res.data || !res.data[0] || !res.data[1] || !res.data[0].lastupdated) {
+      throw new Error(
+        'fetch to fetch data from worldbank, unexpected response for request'
+      )
     }
+
+    const resInfo = res.data[0]
 
     if (
       currentLastUpdatedDate &&
