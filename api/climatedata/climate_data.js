@@ -34,7 +34,7 @@ const fetchCountryCodes = memoizee(
       return { ...acc, [countryCode.name]: countryCode.iso3 }
     }, {})
   },
-  { maxAge: memoizeeMaxAge }
+  { maxAge: memoizeeMaxAge, promise: true }
 )
 
 const fetchEmissionData = memoizee(
@@ -49,7 +49,7 @@ const fetchEmissionData = memoizee(
 
     return fetchData('emissionData&' + countryCode, fetchFunc, parseFunc)
   },
-  { maxAge: memoizeeMaxAge }
+  { maxAge: memoizeeMaxAge, promise: true }
 )
 
 const fetchEmissionPerCapitaData = memoizee(
@@ -68,7 +68,7 @@ const fetchEmissionPerCapitaData = memoizee(
       parseFunc
     )
   },
-  { maxAge: memoizeeMaxAge }
+  { maxAge: memoizeeMaxAge, promise: true }
 )
 
 const allEmissionsAndGdbForYear = memoizee(
@@ -113,7 +113,7 @@ const allEmissionsAndGdbForYear = memoizee(
     const key = 'allEmissionsAndGdbForYear&' + year
     return fetchData(key, fetchFunc, parseFunc)
   },
-  { maxAge: memoizeeMaxAge }
+  { maxAge: memoizeeMaxAge, promise: true }
 )
 
 module.exports = {
