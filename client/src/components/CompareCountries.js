@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Alert } from "react-bootstrap";
 
 import CountryAdd from "./compareCountries/CountryAdd";
 import SelectedCountries from "./compareCountries/SelectedCountries";
@@ -13,12 +14,18 @@ class CompareCountries extends React.Component {
       selectedCountries: {},
       emissionData: {},
       emissionPerCapitaData: {},
-      loading: false
+      loading: false,
+      fatalError: false
     };
   }
   async componentDidMount() {
-    const res = await axios.get("/api/countries");
-    this.setState({ countries: res.data });
+    try {
+      const res = await axios.get("/api/countries");
+      if (res.status !== 200) throw "";
+      this.setState({ countries: res.data });
+    } catch (err) {
+      this.setState({ fatalError: true });
+    }
   }
 
   async addCountry(countryName) {
@@ -58,6 +65,15 @@ class CompareCountries extends React.Component {
   }
 
   render() {
+    if (this.state.fatalError) {
+      return (
+        <Alert bsStyle="danger">
+          <h4>Unable to load data from API!</h4>
+          <p>Try again later.</p>
+        </Alert>
+      );
+    }
+
     return (
       <div class="row marketing">
         <div class="col">
@@ -77,6 +93,7 @@ class CompareCountries extends React.Component {
               emissionPerCapitaData={this.state.emissionPerCapitaData}
               selectedCountries={this.state.selectedCountries}
               loading={this.state.loading}
+              errorMessage={this.state.errorMessage}
             />
           </div>
         </div>

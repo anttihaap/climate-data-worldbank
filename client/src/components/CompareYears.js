@@ -1,7 +1,9 @@
 import React from "react";
+import axios from "axios";
+import { Alert } from "react-bootstrap";
+
 import BootstrapTable from "react-bootstrap-table-next";
 import YearScrollDropdown from "./util/YearScrollDropdown";
-import axios from "axios";
 
 const columns = [
   {
@@ -42,7 +44,8 @@ class CompareYears extends React.Component {
       currentAllEmissionsPerCapita: [],
       currentYear: "2014",
       fetchingData: true,
-      noYearSelected: true
+      noYearSelected: true,
+      fetchError: false
     };
   }
 
@@ -52,13 +55,19 @@ class CompareYears extends React.Component {
       noYearSelected: false,
       currentAllEmissionsPerCapita: []
     });
-    const res = await axios.get(
-      `/api/emissions-and-gdp/all/year/${this.state.currentYear}/`
-    );
-    this.setState({
-      currentAllEmissionsPerCapita: res.data,
-      fetchingData: false
-    });
+    try {
+      const res = await axios.get(
+        `/api/emissions-and-gdp/all/year/${this.state.currentYear}/`
+      );
+      if (res.status !== 200) throw "";
+      this.setState({
+        currentAllEmissionsPerCapita: res.data,
+        fetchingData: false,
+        fetchError: false
+      });
+    } catch (err) {
+      this.setState({ fetchError: true });
+    }
   }
 
   changeYear(year) {
@@ -71,22 +80,34 @@ class CompareYears extends React.Component {
     return (
       <div>
         <YearScrollDropdown changeYear={this.changeYear.bind(this)} />
-
-        <h4>
-          Emissions for year{" "}
-          {this.state.noYearSelected ? "-" : this.state.currentYear}
-        </h4>
-        {this.state.fetchingData && !this.state.noYearSelected ? (
-          <p>Fetching data...</p>
-        ) : (
-          <BootstrapTable
-            className="row marketing"
-            keyField="countryName"
-            data={this.state.currentAllEmissionsPerCapita}
-            columns={columns}
-          />
-        )}
+        {this.state.fetchError
+          ? this.renderFetchError()
+          : this.renderEmissionsTable()}
       </div>
+    );
+  }
+
+  renderEmissionsTable() {
+    return this.state.fetchingData && !this.state.noYearSelected ? (
+      <p>Fetching data...</p>
+    ) : (
+      <BootstrapTable
+        className="row marketing"
+        keyField="countryName"
+        data={this.state.currentAllEmissionsPerCapita}
+        columns={columns}
+      />
+    );
+  }
+
+  renderFetchError() {
+    return (
+      <Alert bsStyle="danger">
+        <h4>
+          Unable to fetch emission data for year {this.state.currentYear}.
+        </h4>
+        <p>Try again later.</p>
+      </Alert>
     );
   }
 }
