@@ -1,4 +1,12 @@
 import React from "react";
+import { connect } from "react-redux";
+import {
+  addSelectedCountry,
+  addEmissionData,
+  addEmissionPerCapitaData,
+  setFetchingEmissionData
+} from "../../reducers/compareCountriesReducer";
+import axios from "axios";
 import ReactAutocomplete from "react-autocomplete";
 import { Alert, Button } from "react-bootstrap";
 
@@ -11,17 +19,44 @@ class CountryAdd extends React.Component {
     };
   }
 
-  addCountry() {
-    if (this.props.selectedCountries.includes(this.state.value)) {
+  validateCountry() {
+    const countryName = this.state.value;
+    if (Object.keys(this.props.selectedCountries).includes(countryName)) {
       this.setState({ errorMessage: "Country already added!" });
-    } else if (!this.props.countries.includes(this.state.value)) {
+      return false;
+    } else if (!Object.keys(this.props.countries).includes(countryName)) {
       this.setState({
         errorMessage: `"${this.state.value}" is not a country!`
       });
-    } else {
-      this.setState({ errorMessage: null });
-      this.props.addCountry(this.state.value);
+      return false;
     }
+    return true;
+  }
+
+  async addCountry() {
+    if (!this.validateCountry()) {
+      return;
+    }
+
+    this.setState({ errorMessage: null });
+
+    const countryName = this.state.value;
+    const countryCode = this.props.countries[countryName];
+
+    this.props.setFetchingEmissionData(true);
+
+    const resEmissionsPerCapita = await axios.get(
+      `/api/emissions-per-capita/${countryCode}`
+    );
+    const resEmissions = await axios.get(`/api/emissions/${countryCode}`);
+
+    this.props.addEmissionData(countryCode, resEmissions.data);
+    this.props.addEmissionPerCapitaData(
+      countryCode,
+      resEmissionsPerCapita.data
+    );
+    this.props.addSelectedCountry(countryName, countryCode);
+    this.props.setFetchingEmissionData(false);
   }
 
   render() {
@@ -29,7 +64,7 @@ class CountryAdd extends React.Component {
       <div>
         <div className="col">
           <ReactAutocomplete
-            items={this.props.countries}
+            items={Object.keys(this.props.countries)}
             shouldItemRender={(item, value) =>
               item.toLowerCase().includes(value.toLowerCase())
             }
@@ -70,4 +105,19 @@ class CountryAdd extends React.Component {
   }
 }
 
-export default CountryAdd;
+const mapStateToProps = state => {
+  return {
+    countries: state.compareCountries.countries,
+    selectedCountries: state.compareCountries.selectedCountries
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {
+    addSelectedCountry,
+    addEmissionData,
+    addEmissionPerCapitaData,
+    setFetchingEmissionData
+  }
+)(CountryAdd);

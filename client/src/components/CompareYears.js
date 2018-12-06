@@ -1,9 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
 
 import BootstrapTable from "react-bootstrap-table-next";
 import YearScrollDropdown from "./util/YearScrollDropdown";
+
+import {
+  setEmissionData,
+  setCurrentYear,
+  setFetchingEmissionData
+} from "../reducers/compareYearsReducer";
 
 const columns = [
   {
@@ -41,39 +48,34 @@ class CompareYears extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentAllEmissionsPerCapita: [],
-      currentYear: "2014",
-      fetchingData: true,
       noYearSelected: true,
       fetchError: false
     };
   }
 
   async fetchAllEmissionsForYear() {
+    this.props.setFetchingEmissionData(true);
     this.setState({
-      fetchingData: true,
-      noYearSelected: false,
-      currentAllEmissionsPerCapita: []
+      noYearSelected: false
     });
     try {
       const res = await axios.get(
-        `/api/emissions-and-gdp/all/year/${this.state.currentYear}/`
+        `/api/emissions-and-gdp/all/year/${this.props.currentYear}/`
       );
       if (res.status !== 200) throw "";
+      this.props.setFetchingEmissionData(false);
       this.setState({
-        currentAllEmissionsPerCapita: res.data,
-        fetchingData: false,
         fetchError: false
       });
+      this.props.setEmissionData(res.data);
     } catch (err) {
       this.setState({ fetchError: true });
     }
   }
 
-  changeYear(year) {
-    this.setState({ currentYear: year }, () => {
-      this.fetchAllEmissionsForYear();
-    });
+  async changeYear(year) {
+    await this.props.setCurrentYear(year);
+    this.fetchAllEmissionsForYear();
   }
 
   render() {
@@ -88,13 +90,13 @@ class CompareYears extends React.Component {
   }
 
   renderEmissionsTable() {
-    return this.state.fetchingData && !this.state.noYearSelected ? (
+    return this.props.fetchingEmissionData && !this.state.noYearSelected ? (
       <p>Fetching data...</p>
     ) : (
       <BootstrapTable
         className="row marketing"
         keyField="countryName"
-        data={this.state.currentAllEmissionsPerCapita}
+        data={this.props.emissionData}
         columns={columns}
       />
     );
@@ -104,7 +106,7 @@ class CompareYears extends React.Component {
     return (
       <Alert bsStyle="danger">
         <h4>
-          Unable to fetch emission data for year {this.state.currentYear}.
+          Unable to fetch emission data for year {this.props.currentYear}.
         </h4>
         <p>Try again later.</p>
       </Alert>
@@ -112,4 +114,11 @@ class CompareYears extends React.Component {
   }
 }
 
-export default CompareYears;
+export default connect(
+  state => ({
+    fetchingEmissionData: state.compareYears.fetchingEmissionData,
+    currentYear: state.compareYears.currentYear,
+    emissionData: state.compareYears.emissionData
+  }),
+  { setFetchingEmissionData, setEmissionData, setCurrentYear }
+)(CompareYears);

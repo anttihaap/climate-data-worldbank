@@ -1,6 +1,8 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Line } from "react-chartjs-2";
 import Loader from "react-loader-spinner";
+import * as R from "ramda";
 
 const EmissionsChart = ({ years, selectedCountries, emissionData }) => {
   const colors = [
@@ -72,11 +74,18 @@ class EmissionsLineGraph extends React.Component {
     return (
       <div>
         <EmissionsChart
-          years={this.props.years}
+          years={R.range(
+            this.props.selectedYearRange.fromYear,
+            this.props.selectedYearRange.toYear + 1
+          )}
           selectedCountries={this.props.selectedCountries}
-          emissionData={this.props.emissionData}
+          emissionData={
+            this.props.showPerCapita
+              ? this.props.emissionPerCapitaData
+              : this.props.emissionData
+          }
         />
-        {this.props.loading && (
+        {this.props.fetchingEmissionData && (
           <div className="emissions-graph-spinner">
             <Loader type="Oval" color="#00BFFF" height="100" width="100" />
           </div>
@@ -86,4 +95,14 @@ class EmissionsLineGraph extends React.Component {
   }
 }
 
-export default EmissionsLineGraph;
+export default connect(
+  state => ({
+    selectedCountries: state.compareCountries.selectedCountries,
+    emissionData: state.compareCountries.emissionData,
+    emissionPerCapitaData: state.compareCountries.emissionPerCapitaData,
+    showPerCapita: state.compareCountries.showPerCapita,
+    fetchingEmissionData: state.compareCountries.fetchingEmissionData,
+    selectedYearRange: state.compareCountries.selectedYearRange
+  }),
+  null
+)(EmissionsLineGraph);

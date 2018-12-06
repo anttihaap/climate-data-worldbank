@@ -1,7 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
+import { removeSelectedCountry } from "../../reducers/compareCountriesReducer.js";
 import { Row } from "react-bootstrap";
 
-const SelectionDisplay = ({ name, removeCountry }) => {
+const SelectionDisplay = ({ name, removeSelectedCountry }) => {
   return (
     <div className="col-xs-3">
       <span>{name}</span>
@@ -10,7 +12,7 @@ const SelectionDisplay = ({ name, removeCountry }) => {
         type="button"
         aria-label="Close"
         onClick={() => {
-          removeCountry(name);
+          removeSelectedCountry(name);
         }}
       >
         <span aria-hidden="true">&times;</span>
@@ -33,7 +35,7 @@ class SelectedCountries extends React.Component {
               {countryNames.map(countryName => (
                 <SelectionDisplay
                   name={countryName}
-                  removeCountry={this.props.removeCountry}
+                  removeSelectedCountry={this.props.removeSelectedCountry}
                 />
               ))}
             </Row>
@@ -44,4 +46,9 @@ class SelectedCountries extends React.Component {
   }
 }
 
-export default SelectedCountries;
+export default connect(
+  state => ({
+    selectedCountries: state.compareCountries.selectedCountries
+  }),
+  { removeSelectedCountry }
+)(SelectedCountries);

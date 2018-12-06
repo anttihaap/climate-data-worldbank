@@ -1,19 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import * as R from "ramda";
 import { FormGroup } from "react-bootstrap";
 import FormControlSelector from "./FormControlSelector";
-class YearScrollDropDown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      year: ""
-    };
-  }
+import { fromYear, toYear } from "../../yearRange";
 
+class YearScrollDropDown extends React.Component {
   onYearChange(e) {
     const year = e.target.value;
-    this.setState({ year });
-    if (year > 1950 && year < 2018 && !isNaN(2018)) {
+    if (year.match(/^\d+$/)) {
       this.props.changeYear(year);
     } else {
       console.log("year not valid!");
@@ -28,7 +23,7 @@ class YearScrollDropDown extends React.Component {
             <FormControlSelector
               controlLabel={"Select a year"}
               onChange={this.onYearChange.bind(this)}
-              options={[" "].concat(R.range(1950, 2018 + 1).reverse())}
+              options={[" "].concat(R.range(fromYear, toYear + 1).reverse())}
               placeHolder=" "
             />
           </div>
@@ -38,4 +33,7 @@ class YearScrollDropDown extends React.Component {
   }
 }
 
-export default YearScrollDropDown;
+export default connect(
+  null,
+  null
+)(YearScrollDropDown);

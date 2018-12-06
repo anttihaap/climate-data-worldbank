@@ -1,7 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Row, Col, FormGroup, Alert } from "react-bootstrap";
 import FormControlSelector from "../util/FormControlSelector";
-import getYearRange from "../../yearRange";
+import * as R from "ramda";
+import { fromYear, toYear } from "../../yearRange";
+
+import {
+  setSelectedFromYear,
+  setSelectedToYear
+} from "../../reducers/selectedYearRangeReducer";
 
 class EmissionsYearRangeSelector extends React.Component {
   constructor(props) {
@@ -21,21 +28,20 @@ class EmissionsYearRangeSelector extends React.Component {
       return;
     } else {
       this.setState({ errorMessage: null });
-      this.props.changeYearRange({
-        fromYear: this.state.fromYear,
-        toYear: this.state.toYear
-      });
+      this.props.setSelectedFromYear(Number(this.state.fromYear));
+      this.props.setSelectedToYear(Number(this.state.toYear));
     }
   }
 
   render() {
+    const yearRange = R.range(fromYear, toYear + 1);
     return (
       <div>
         <FormGroup>
           <Col xs={2}>
             <FormControlSelector
               controlLabel={"from year"}
-              options={getYearRange()}
+              options={yearRange}
               onChange={e => {
                 this.setState(
                   { fromYear: e.target.value },
@@ -47,7 +53,7 @@ class EmissionsYearRangeSelector extends React.Component {
           <Col xs={2}>
             <FormControlSelector
               controlLabel={"to year"}
-              options={getYearRange().reverse()}
+              options={[...yearRange].reverse()}
               onChange={e => {
                 this.setState(
                   { toYear: e.target.value },
@@ -69,4 +75,10 @@ class EmissionsYearRangeSelector extends React.Component {
   }
 }
 
-export default EmissionsYearRangeSelector;
+export default connect(
+  state => ({
+    fromYear: state.compareCountries.selectedYearRange.fromYear,
+    toYear: state.compareCountries.selectedYearRange.toYear
+  }),
+  { setSelectedFromYear, setSelectedToYear }
+)(EmissionsYearRangeSelector);
