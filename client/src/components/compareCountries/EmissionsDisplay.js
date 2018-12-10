@@ -7,11 +7,15 @@ import { toggleShowPerCapita } from "../../reducers/compareCountriesReducer.js";
 import EmissionsYearRangeSelector from "./EmissionsYearRangeSelector";
 import EmissionsLineGraph from "./EmissionsLineGraph";
 
-const PerCapitaCheckBox = ({ toggleShowPerCapita }) => {
+const PerCapitaCheckBox = ({ toggleShowPerCapita, showPerCapita }) => {
   return (
     <div className="col-xs2 checkbox">
       <label>
-        <input type="checkbox" onChange={toggleShowPerCapita} />
+        <input
+          type="checkbox"
+          checked={showPerCapita}
+          onChange={toggleShowPerCapita}
+        />
         Show emissions per capita
       </label>
     </div>
@@ -27,6 +31,7 @@ class EmissionsDisplay extends React.Component {
         <Col ms={6}>
           <PerCapitaCheckBox
             toggleShowPerCapita={this.props.toggleShowPerCapita}
+            showPerCapita={this.props.showPerCapita}
           />
         </Col>
 
