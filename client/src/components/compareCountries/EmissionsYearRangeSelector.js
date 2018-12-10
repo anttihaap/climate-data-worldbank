@@ -37,34 +37,34 @@ class EmissionsYearRangeSelector extends React.Component {
     const yearRange = R.range(fromYear, toYear + 1);
     return (
       <div>
-        <Row className="marketing">
-          <Col xs={2}>
-            <FormControlSelector
-              controlLabel={"from year"}
-              options={yearRange}
-              onChange={e => {
-                this.setState(
-                  { fromYear: e.target.value },
-                  this.validateYearRange
-                );
-              }}
-            />
-          </Col>
-          <Col xs={2}>
-            <FormControlSelector
-              controlLabel={"to year"}
-              options={[...yearRange].reverse()}
-              onChange={e => {
-                this.setState(
-                  { toYear: e.target.value },
-                  this.validateYearRange
-                );
-              }}
-            />
-          </Col>
-          <Col xs={2} />
-          <Col xs={2} />
-        </Row>
+        <div className="container-fluid">
+          <Row>
+            <Col sm={2}>
+              <FormControlSelector
+                controlLabel={"from year"}
+                options={yearRange}
+                onChange={e => {
+                  this.setState(
+                    { fromYear: e.target.value },
+                    this.validateYearRange
+                  );
+                }}
+              />
+            </Col>
+            <Col sm={2}>
+              <FormControlSelector
+                controlLabel={"to year"}
+                options={[...yearRange].reverse()}
+                onChange={e => {
+                  this.setState(
+                    { toYear: e.target.value },
+                    this.validateYearRange
+                  );
+                }}
+              />
+            </Col>
+          </Row>
+        </div>
         {this.state.errorMessage && (
           <Row className="marketing">
             <Alert bsStyle="danger">{this.state.errorMessage}</Alert>
