@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler')
 
 apiRouter.get(
   '/countries',
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     const countries = await climateData.fetchCountryCodes()
     res.json(countries)
   })
@@ -16,17 +16,6 @@ apiRouter.get(
     const countryCode = req.params.countryCode
 
     const emissionData = await climateData.fetchEmissionData(countryCode)
-    res.json(emissionData)
-  })
-)
-
-apiRouter.get(
-  '/emissions-per-capita/:countryCode',
-  asyncHandler(async (req, res) => {
-    const countryCode = req.params.countryCode
-    const emissionData = await climateData.fetchEmissionPerCapitaData(
-      countryCode
-    )
     res.json(emissionData)
   })
 )

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import {
   addSelectedCountry,
   addEmissionData,
-  addEmissionPerCapitaData,
   setFetchingEmissionData
 } from "../../reducers/compareCountriesReducer";
 import axios from "axios";
@@ -45,16 +44,10 @@ class CountryAdd extends React.Component {
 
     this.props.setFetchingEmissionData(true);
 
-    const resEmissionsPerCapita = await axios.get(
-      `/api/emissions-per-capita/${countryCode}`
-    );
     const resEmissions = await axios.get(`/api/emissions/${countryCode}`);
 
     this.props.addEmissionData(countryCode, resEmissions.data);
-    this.props.addEmissionPerCapitaData(
-      countryCode,
-      resEmissionsPerCapita.data
-    );
+
     this.props.addSelectedCountry(countryName, countryCode);
     this.props.setFetchingEmissionData(false);
   }
@@ -117,7 +110,6 @@ export default connect(
   {
     addSelectedCountry,
     addEmissionData,
-    addEmissionPerCapitaData,
     setFetchingEmissionData
   }
 )(CountryAdd);

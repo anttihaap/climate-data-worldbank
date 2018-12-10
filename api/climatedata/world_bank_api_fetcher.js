@@ -5,11 +5,7 @@ const countryCodesUrl =
   'http://climatedataapi.worldbank.org/climateweb/rest/v1/country/'
 
 const emissionsApiUrl = (countryCode, page) => {
-  return `http://api.worldbank.org/v2/country/${countryCode}/indicator/EN.ATM.CO2E.KT?format=json&page=${page}`
-}
-
-const emissionsPerCapitaApiUrl = (countryCode, page) => {
-  return `http://api.worldbank.org/v2/country/${countryCode}/indicator/EN.ATM.CO2E.PC?format=json&page=${page}`
+  return `http://api.worldbank.org/v2/country/${countryCode}/indicator/EN.ATM.CO2E.KT;EN.ATM.CO2E.PC?source=2&format=json&page=${page}`
 }
 
 const allEmissionsAndGDPForYearApiUrl = (year, page) => {
@@ -53,14 +49,6 @@ const fetchAllPages = async (apiUrl, currentLastUpdatedDate) => {
   return { status: 'success', data: fetchedData }
 }
 
-const formatEmissionsData = emissionsData =>
-  emissionsData.map(emission => {
-    return {
-      date: emission.date,
-      emissions: emission.value
-    }
-  })
-
 const fetchCountryCodes = async () => {
   const res = await axios.get(countryCodesUrl)
   if (res.status !== 200) {
@@ -76,30 +64,17 @@ const fetchCountryCodes = async () => {
 
 const fetchEmissionsData = async (countryCode, currentLastUpdatedDate) => {
   const fetchRes = await fetchAllPages(
-    pages => emissionsApiUrl(countryCode, pages),
+    page => emissionsApiUrl(countryCode, page),
     currentLastUpdatedDate
   )
+
   if (fetchRes.status === 'notModified' || fetchRes.status === 'error') {
     return fetchRes
   }
+
   return {
     status: fetchRes.status,
-
-    data: formatEmissionsData(fetchRes.data)
-  }
-}
-
-const fetchEmissionsPerCapitaData = async (
-  countryCode,
-  currentLastUpdatedDate
-) => {
-  const fetchRes = await fetchAllPages(
-    pages => emissionsPerCapitaApiUrl(countryCode, pages),
-    currentLastUpdatedDate
-  )
-  return {
-    status: fetchRes.status,
-    data: formatEmissionsData(fetchRes.data)
+    data: R.groupBy(a => a.date, fetchRes.data)
   }
 }
 
@@ -117,6 +92,5 @@ const fetchAllEmissionsAndGDBforYear = async (year, currentLastUpdatedDate) => {
 module.exports = {
   fetchCountryCodes,
   fetchEmissionsData,
-  fetchEmissionsPerCapitaData,
   fetchAllEmissionsAndGDBforYear
 }

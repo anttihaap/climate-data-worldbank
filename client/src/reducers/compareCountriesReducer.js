@@ -8,7 +8,6 @@ const SET_COUNTRIES = `${compareCountriesPrefix}_SET_COUNTRIES`;
 const ADD_SELECTED_COUNTRY = `${compareCountriesPrefix}_ADD_SELECTED_COUNTRY`;
 const REMOVE_SELECTED_COUNTRY = `${compareCountriesPrefix}_REMOVE_SELECTED_COUNTRY`;
 const ADD_EMISSION_DATA = `${compareCountriesPrefix}_ADD_EMISSION_DATA`;
-const ADD_EMISSION_PER_CAPITA_DATA = `${compareCountriesPrefix}_ADD_EMISSION_PER_CAPITA_DATA`;
 const SET_FETCHING_EMISSION_DATA = `${compareCountriesPrefix}_SET_FETCHING_EMISSION_DATA`;
 const TOGGLE_SHOW_PER_CAPITA = `${compareCountriesPrefix}_TOGGLE_SHOW_PER_CAPITA`;
 
@@ -66,18 +65,6 @@ const fetchingEmissionDataReducer = (state = false, action) => {
   }
 };
 
-const emissionPerCapitaDataReducer = (state = {}, action) => {
-  switch (action.type) {
-    case ADD_EMISSION_PER_CAPITA_DATA:
-      return {
-        ...state,
-        [action.data.countryCode]: action.data.emissionPerCapitaData
-      };
-    default:
-      return state;
-  }
-};
-
 const showPerCapitaReducer = (state = false, action) => {
   switch (action.type) {
     case TOGGLE_SHOW_PER_CAPITA:
@@ -113,14 +100,6 @@ export const addEmissionData = (countryCode, emissionData) => ({
   data: { countryCode, emissionData }
 });
 
-export const addEmissionPerCapitaData = (
-  countryCode,
-  emissionPerCapitaData
-) => ({
-  type: ADD_EMISSION_PER_CAPITA_DATA,
-  data: { countryCode, emissionPerCapitaData }
-});
-
 export const removeSelectedCountry = countryName => ({
   type: REMOVE_SELECTED_COUNTRY,
   data: { countryName }
@@ -136,7 +115,6 @@ export default combineReducers({
   countries: countriesReducer,
   selectedCountries: selectedCountriesReducer,
   emissionData: emissionDataReducer,
-  emissionPerCapitaData: emissionPerCapitaDataReducer,
   showPerCapita: showPerCapitaReducer,
   selectedYearRange: selectedYearRangeReducer
 });

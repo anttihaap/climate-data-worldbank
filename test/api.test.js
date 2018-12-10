@@ -31,16 +31,6 @@ describe('test', () => {
         )
       })
 
-      it('/emissions-per-capita/FI', async () => {
-        const firstExpetedFecthUrl =
-          'http://api.worldbank.org/v2/country/FIN/indicator/EN.ATM.CO2E.PC?format=json&page=1'
-        mock.onGet(firstExpetedFecthUrl).reply(500, {})
-        await expectGet500withErrorMessage(
-          '/api/emissions-per-capita/FIN',
-          'failed to fetch data from worldbank, fetch failed'
-        )
-      })
-
       it('/emissions-and-gdp/all/year/201', async () => {
         const firstExpetedFecthUrl =
           'http://api.worldbank.org/v2/country/ALL/indicator/EN.ATM.CO2E.KT;EN.ATM.CO2E.PC;NY.GDP.MKTP.CD?source=2&date=2014&format=json&page=1'

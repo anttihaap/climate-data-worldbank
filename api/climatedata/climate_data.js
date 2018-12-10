@@ -43,30 +43,25 @@ const fetchEmissionData = memoizee(
       await dataFetcher.fetchEmissionsData(countryCode, timestamp)
 
     const parseFunc = data =>
-      L.compose(data).reduce((acc, emission) => {
-        return { ...acc, [emission.date]: emission.emissions }
-      }, {})
+      Object.keys(data).reduce((acc, year) => {
+        const dataForYear = data[year]
 
+        const emissions = dataForYear.filter(
+          data => data.indicator.id == 'EN.ATM.CO2E.KT'
+        )
+
+        const emissionsPerCapita = dataForYear.filter(
+          data => data.indicator.id === 'EN.ATM.CO2E.PC'
+        )
+        return {
+          ...acc,
+          [year]: {
+            emissions: emissions[0].value,
+            emissionsPerCapita: emissionsPerCapita[0].value
+          }
+        }
+      }, {})
     return fetchData('emissionData&' + countryCode, fetchFunc, parseFunc)
-  },
-  { maxAge: memoizeeMaxAge, promise: true }
-)
-
-const fetchEmissionPerCapitaData = memoizee(
-  async countryCode => {
-    const fetchFunc = async timestamp =>
-      await dataFetcher.fetchEmissionsPerCapitaData(countryCode, timestamp)
-
-    const parseFunc = data =>
-      L.compose(data).reduce((acc, emission) => {
-        return { ...acc, [emission.date]: emission.emissions }
-      }, {})
-
-    return fetchData(
-      'emissionPerCalitaData&' + countryCode,
-      fetchFunc,
-      parseFunc
-    )
   },
   { maxAge: memoizeeMaxAge, promise: true }
 )
@@ -119,6 +114,5 @@ const allEmissionsAndGdbForYear = memoizee(
 module.exports = {
   fetchEmissionData,
   fetchCountryCodes,
-  fetchEmissionPerCapitaData,
   allEmissionsAndGdbForYear
 }

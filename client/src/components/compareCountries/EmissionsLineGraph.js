@@ -4,7 +4,12 @@ import { Line } from "react-chartjs-2";
 import Loader from "react-loader-spinner";
 import * as R from "ramda";
 
-const EmissionsChart = ({ years, selectedCountries, emissionData }) => {
+const EmissionsChart = ({
+  years,
+  selectedCountries,
+  emissionData,
+  showPerCapita
+}) => {
   const colors = [
     "100,0,0",
     "0,0,100",
@@ -16,7 +21,15 @@ const EmissionsChart = ({ years, selectedCountries, emissionData }) => {
   ];
   const parseEmissionDataForDataset = countryCode => {
     const emissionsForCountry = emissionData[countryCode];
-    return years.map(year => emissionsForCountry[year]);
+    return years.map(year => {
+      const emissionsForYear = emissionsForCountry[year];
+      if (!emissionsForYear) {
+        return { emissions: null, emissionsPerCapita: null };
+      }
+      return showPerCapita
+        ? emissionsForYear.emissionsPerCapita
+        : emissionsForYear.emissions;
+    });
   };
 
   const createDataset = (countryName, color, data) => {
@@ -79,11 +92,8 @@ class EmissionsLineGraph extends React.Component {
             this.props.selectedYearRange.toYear + 1
           )}
           selectedCountries={this.props.selectedCountries}
-          emissionData={
-            this.props.showPerCapita
-              ? this.props.emissionPerCapitaData
-              : this.props.emissionData
-          }
+          emissionData={this.props.emissionData}
+          showPerCapita={this.props.showPerCapita}
         />
         {this.props.fetchingEmissionData && (
           <div className="emissions-graph-spinner">
@@ -99,7 +109,6 @@ export default connect(
   state => ({
     selectedCountries: state.compareCountries.selectedCountries,
     emissionData: state.compareCountries.emissionData,
-    emissionPerCapitaData: state.compareCountries.emissionPerCapitaData,
     showPerCapita: state.compareCountries.showPerCapita,
     fetchingEmissionData: state.compareCountries.fetchingEmissionData,
     selectedYearRange: state.compareCountries.selectedYearRange
