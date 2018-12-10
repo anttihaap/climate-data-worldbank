@@ -7,7 +7,7 @@ import {
 } from "../../reducers/compareCountriesReducer";
 import axios from "axios";
 import ReactAutocomplete from "react-autocomplete";
-import { Alert, Button } from "react-bootstrap";
+import { Col, Row, Alert, Button } from "react-bootstrap";
 
 class CountryAdd extends React.Component {
   constructor(props) {
@@ -54,8 +54,8 @@ class CountryAdd extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className="col">
+      <div class="row marketing">
+        <div class="col">
           <ReactAutocomplete
             items={Object.keys(this.props.countries)}
             shouldItemRender={(item, value) =>
@@ -89,9 +89,11 @@ class CountryAdd extends React.Component {
           <Button onClick={this.addCountry.bind(this)}>Add</Button>
         </div>
         <div>
-          {this.state.errorMessage && (
-            <Alert bsStyle="danger">{this.state.errorMessage}</Alert>
-          )}
+          <Col>
+            {this.state.errorMessage && (
+              <Alert bsStyle="danger">{this.state.errorMessage}</Alert>
+            )}
+          </Col>
         </div>
       </div>
     );

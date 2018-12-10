@@ -2,10 +2,10 @@
 body {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  /* override bootstrap margins */
-  h1 h2 h3 {
-    margin-top: 10px;
-  }
+}
+
+h1, h2, h3 {
+  margin-top: 10px;
 }
 
 .country-display {
@@ -66,10 +66,7 @@ margin-left: 5px;
 
 /* Supporting marketing content */
 .marketing {
-  margin: 3rem 0;
-}
-.marketing p + h4 {
-a
+  margin: 1rem 0;
 }
 
 /* Responsive: Portrait tablets and up */
@@ -100,4 +97,9 @@ a
   position: absolute;
   margin-left: 280px;
   margin-top: -240px;
+}
+
+.alert {
+  margin-top: 10px;
+  margin-bottom: 0px;
 }

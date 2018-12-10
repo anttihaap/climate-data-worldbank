@@ -34,14 +34,10 @@ class CompareCountries extends React.Component {
     }
 
     return (
-      <div class="row marketing">
-        <div class="col">
-          <div>
-            <CountryAdd />
-            <SelectedCountries />
-            <EmissionsDisplay />
-          </div>
-        </div>
+      <div>
+        <CountryAdd />
+        <SelectedCountries />
+        <EmissionsDisplay />
       </div>
     );
   }

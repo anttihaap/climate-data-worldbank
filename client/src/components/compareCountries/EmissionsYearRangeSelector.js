@@ -37,7 +37,7 @@ class EmissionsYearRangeSelector extends React.Component {
     const yearRange = R.range(fromYear, toYear + 1);
     return (
       <div>
-        <FormGroup>
+        <Row className="marketing">
           <Col xs={2}>
             <FormControlSelector
               controlLabel={"from year"}
@@ -64,12 +64,12 @@ class EmissionsYearRangeSelector extends React.Component {
           </Col>
           <Col xs={2} />
           <Col xs={2} />
-        </FormGroup>
-        <Row>
-          {this.state.errorMessage && (
-            <Alert bsStyle="danger">{this.state.errorMessage}</Alert>
-          )}
         </Row>
+        {this.state.errorMessage && (
+          <Row className="marketing">
+            <Alert bsStyle="danger">{this.state.errorMessage}</Alert>
+          </Row>
+        )}
       </div>
     );
   }

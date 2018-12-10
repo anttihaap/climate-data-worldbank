@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Col } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 import { toggleShowPerCapita } from "../../reducers/compareCountriesReducer.js";
 
@@ -26,20 +26,23 @@ class EmissionsDisplay extends React.Component {
   render() {
     return (
       <div>
-        <h3>Emissions</h3>
-        <EmissionsYearRangeSelector />
-        <Col ms={6}>
-          <PerCapitaCheckBox
-            toggleShowPerCapita={this.props.toggleShowPerCapita}
-            showPerCapita={this.props.showPerCapita}
-          />
-        </Col>
-
-        <div className="row text-center">
+        <Row className="marketing">
+          <h3>Emissions</h3>
+          <EmissionsYearRangeSelector />
+        </Row>
+        <Row className="marketing">
+          <Col sm={6}>
+            <PerCapitaCheckBox
+              toggleShowPerCapita={this.props.toggleShowPerCapita}
+              showPerCapita={this.props.showPerCapita}
+            />
+          </Col>
+        </Row>
+        <Row className="text-center">
           {this.props.showPerCapita
             ? "CO2 emissions (metric tons per capita)"
             : "CO2 emissions (kt)"}
-        </div>
+        </Row>
         <EmissionsLineGraph />
       </div>
     );
