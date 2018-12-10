@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
+import Loader from "react-loader-spinner";
 
 import BootstrapTable from "react-bootstrap-table-next";
 import YearScrollDropdown from "./util/YearScrollDropdown";
@@ -91,14 +92,22 @@ class CompareYears extends React.Component {
 
   renderEmissionsTable() {
     return this.props.fetchingEmissionData && !this.state.noYearSelected ? (
-      <p>Fetching data...</p>
+      <div className="row">
+        <div className="text-center">
+          <h4>Loading data..</h4>
+          <Loader type="Oval" color="#00BFFF" height="50" width="50" />
+        </div>
+      </div>
     ) : (
-      <BootstrapTable
-        className="row marketing"
-        keyField="countryName"
-        data={this.props.emissionData}
-        columns={columns}
-      />
+      <div>
+        <h4>Emissions for year {this.props.currentYear}</h4>
+        <BootstrapTable
+          className="row marketing"
+          keyField="countryName"
+          data={this.props.emissionData}
+          columns={columns}
+        />
+      </div>
     );
   }
 
