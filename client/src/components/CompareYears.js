@@ -61,7 +61,7 @@ class CompareYears extends React.Component {
       const res = await axios.get(
         `/api/emissions-and-gdp/all/year/${this.props.currentYear}/`
       );
-      if (res.status !== 200) throw "";
+      if (res.status !== 200) throw new Error("");
       this.props.setFetchingEmissionData(false);
       this.setState({
         fetchError: false

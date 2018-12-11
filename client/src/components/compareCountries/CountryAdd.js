@@ -54,8 +54,8 @@ class CountryAdd extends React.Component {
 
   render() {
     return (
-      <div class="row marketing">
-        <div class="col">
+      <Row className="marketing">
+        <Col>
           <ReactAutocomplete
             items={Object.keys(this.props.countries)}
             shouldItemRender={(item, value) =>
@@ -84,7 +84,7 @@ class CountryAdd extends React.Component {
           />
 
           <p />
-        </div>
+        </Col>
         <div>
           <Button onClick={this.addCountry.bind(this)}>Add</Button>
         </div>
@@ -95,7 +95,7 @@ class CountryAdd extends React.Component {
             )}
           </Col>
         </div>
-      </div>
+      </Row>
     );
   }
 }

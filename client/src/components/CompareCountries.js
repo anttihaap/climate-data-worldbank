@@ -16,7 +16,7 @@ class CompareCountries extends React.Component {
   async componentDidMount() {
     try {
       const res = await axios.get("/api/countries");
-      if (res.status !== 200) throw "";
+      if (res.status !== 200) throw new Error("");
       this.props.setCountries(res.data);
     } catch (err) {
       this.props.setFatalError();

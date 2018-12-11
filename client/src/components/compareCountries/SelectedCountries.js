@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { removeSelectedCountry } from "../../reducers/compareCountriesReducer.js";
-import { Row } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
 const SelectionDisplay = ({ name, removeSelectedCountry }) => {
   return (
@@ -25,8 +25,8 @@ class SelectedCountries extends React.Component {
   render() {
     const countryNames = Object.keys(this.props.selectedCountries);
     return (
-      <div class="row marketing">
-        <div class="col">
+      <Row className="marketing">
+        <Col>
           <h3>Selected countries</h3>
           <div className="country-display">
             {countryNames.length === 0 ? (
@@ -42,8 +42,8 @@ class SelectedCountries extends React.Component {
               </Row>
             )}
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     );
   }
 }

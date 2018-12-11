@@ -12,7 +12,9 @@ class FormControlSelector extends React.Component {
           onChange={this.props.onChange}
         >
           {this.props.options.map(option => (
-            <option value={option}>{option}</option>
+            <option key={option} value={option}>
+              {option}
+            </option>
           ))}
         </FormControl>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Row, Col, FormGroup, Alert } from "react-bootstrap";
+import { Row, Col, Alert } from "react-bootstrap";
 import FormControlSelector from "../util/FormControlSelector";
 import * as R from "ramda";
 import { fromYear, toYear } from "../../yearRange";
