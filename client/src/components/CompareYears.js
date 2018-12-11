@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
 import Loader from "react-loader-spinner";
+import numeral from "numeral";
 
 import BootstrapTable from "react-bootstrap-table-next";
 import YearScrollDropdown from "./util/YearScrollDropdown";
@@ -22,28 +23,25 @@ const columns = [
   {
     dataField: "emissions",
     text: "C02 (kt)",
-    sort: true
+    sort: true,
+    formatter: cell => (cell === null ? "" : numeral(cell).format("0,0.000")),
+    style: { "text-align": "right" }
   },
   {
     dataField: "emissionsPerCapita",
     text: "CO2 (metric tons per capita)",
-    sort: true
+    sort: true,
+    formatter: cell => (cell === null ? "" : numeral(cell).format("0,0.000")),
+    style: { "text-align": "right" }
   },
   {
     dataField: "gdp",
     text: "GDP (million US$)",
-    sort: true
+    sort: true,
+    formatter: cell => (cell === null ? "" : numeral(cell).format("0,0.00")),
+    style: { "text-align": "right" }
   }
 ];
-
-const convertStrNumWithCommasToNum = strNum => {
-  return strNum
-    .split(",")
-    .reverse()
-    .reduce((sum, num, index) => {
-      return sum + num * Math.pow(1000, index);
-    }, 0);
-};
 
 class CompareYears extends React.Component {
   constructor(props) {
