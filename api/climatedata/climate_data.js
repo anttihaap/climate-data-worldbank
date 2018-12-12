@@ -20,11 +20,16 @@ const fetchData = async (key, fetchFunc, parseFunc) => {
   const fetchedData = await fetchFunc(timeStamp)
 
   if (fetchedData.status === 'notModified') {
-    return database[key]
+    return { status: 'success', data: database[key] }
   }
+
+  if (fetchedData.status !== 'success') {
+    return fetchedData
+  }
+
   const parsedData = parseFunc(fetchedData.data)
   saveToDataBase(key, parsedData)
-  return parsedData
+  return { status: 'success', data: parsedData }
 }
 
 const fetchCountryCodes = memoizee(

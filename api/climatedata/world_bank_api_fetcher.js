@@ -26,13 +26,22 @@ const fetchAllPages = async (apiUrl, currentLastUpdatedDate) => {
   while (true) {
     const res = await fetch(apiUrl(currentPage))
 
-    if (!res.data || !res.data[0] || !res.data[1] || !res.data[0].lastupdated) {
+    if (
+      !res.data ||
+      !res.data[0] ||
+      res.data[1] === undefined ||
+      res.data[0].lastupdated === undefined
+    ) {
       throw new Error(
         'fetch to fetch data from worldbank, unexpected response for request'
       )
     }
 
+    const resData = res.data[1]
     const resInfo = res.data[0]
+    if (res.data[1] === null) {
+      return { status: 'notFound', data: [] }
+    }
 
     if (
       currentLastUpdatedDate &&
@@ -40,7 +49,7 @@ const fetchAllPages = async (apiUrl, currentLastUpdatedDate) => {
     ) {
       return { status: 'notModified', data: [] }
     }
-    fetchedData = fetchedData.concat(res.data[1])
+    fetchedData = fetchedData.concat(resData)
     if (currentPage === resInfo.pages) {
       break
     }
@@ -68,7 +77,7 @@ const fetchEmissionsData = async (countryCode, currentLastUpdatedDate) => {
     currentLastUpdatedDate
   )
 
-  if (fetchRes.status === 'notModified' || fetchRes.status === 'error') {
+  if (fetchRes.status !== 'success') {
     return fetchRes
   }
 
@@ -83,6 +92,11 @@ const fetchAllEmissionsAndGDBforYear = async (year, currentLastUpdatedDate) => {
     page => allEmissionsAndGDPForYearApiUrl(year, page),
     currentLastUpdatedDate
   )
+
+  if (fetchRes.status !== 'success') {
+    return fetchRes
+  }
+
   return {
     status: fetchRes.status,
     data: R.groupBy(a => a.countryiso3code, fetchRes.data)
