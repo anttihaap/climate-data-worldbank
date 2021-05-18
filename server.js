@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 const api = require('./api/api')
 
-app.use(express.static(__dirname + '/client-build/build'))
+app.use(express.static(__dirname + '/client/build'))
 app.use('/api', api)
 
 app.use((err, req, res, next) => {
