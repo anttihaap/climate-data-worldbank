@@ -15,7 +15,7 @@ To start the app in development mode run:
 `docker-compose up --build`
 
 
-## Wihout Docker compose
+#### Wihout Docker compose
 
 ```
 # In terminal 1
