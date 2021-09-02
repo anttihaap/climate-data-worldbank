@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=production nodemon server.js",
     "test": "NODE_ENV=test jest",
     "watch": "nodemon server.js"
   },
@@ -18,7 +19,7 @@
     "express-async-handler": "^1.1.4",
     "memoizee": "^0.4.14",
     "morgan": "^1.9.1",
-    "nodemon": "^1.18.7",
+    "nodemon": "^1.19.4",
     "partial.lenses": "^14.17.0",
     "ramda": "^0.26.1"
   },

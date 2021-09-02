@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  react-dev-env:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile.dev
+    command: npm start
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./client/:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    container_name: node-dev-env
+  api-dev-env:
+    build: .
+    command: npm run dev
+    ports: 
+      - 3001:80 # For testing. react-dev-env access api via docker network
+    volumes:
+      - ./:/usr/src/app
+    container_name: api-dev-env
+
+volumes:
+  node_modules:

@@ -10,6 +10,13 @@ Node 8
 
 ### Run development environment
 
+To start the app in development mode run:
+
+`docker-compose up --build`
+
+
+## Wihout Docker compose
+
 ```
 # In terminal 1
 
