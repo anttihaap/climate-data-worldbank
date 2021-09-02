@@ -1,0 +1,7 @@
+FROM node:8
+
+# Install server depenencies
+COPY ./client/package*.json ./client/
+RUN npm install
+
+CMD ["node", "server.js"]
