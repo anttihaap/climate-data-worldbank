@@ -27,15 +27,14 @@ npm run start
 
 ### Deployment
 
+Deployments are done with Docker. See [Dockerfile](Dockerfile).
+
+Build image:
+
+`docker build -t climate-data-worldbank .`
+
+Run image:
+
+`docker run -d -p 80:80 climate-data-dataworld`
+
 App port can be specified with `PORT` env variable.
-
-```
-# Install client dependencies
-npm --prefix client install
-
-# Build client
-npm --prefix client run build
-
-# Start server
-npm start
-```

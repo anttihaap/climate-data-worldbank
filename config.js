@@ -1,3 +1,3 @@
-const serverPort = process.env.PORT || 3001
+const serverPort = process.env.PORT || 80
 
 module.exports = { serverPort }
