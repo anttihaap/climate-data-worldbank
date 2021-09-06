@@ -45,3 +45,7 @@ Run image:
 `docker run -d -p 80:80 climate-data-dataworld`
 
 App port can be specified with `PORT` env variable.
+
+#### Deployment pipeline to Heroku
+
+Deployments are done automaticly to Heroku from `master` branch. See [heroku-deployment.yml](.github/workflows/heroku-deployment.yml).
