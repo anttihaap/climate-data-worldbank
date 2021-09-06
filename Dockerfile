@@ -1,15 +1,30 @@
-FROM node:8
+FROM node:8-alpine AS build-stage
+
+WORKDIR /app
 
 # Install client
-COPY ./client/package*.json ./client/
-RUN npm --prefix client install
+COPY ./client/package*.json ./
+RUN npm install
 
-COPY . .
+COPY ./client ./
 
 # Build client
-RUN npm --prefix client run build
+RUN npm run build
+
+
+FROM node:8-alpine
+
+WORKDIR /app
 
 # Instal server dependencies
-RUN npm install
+# and remove unnecessary client folder
+COPY . .
+RUN npm install && \
+    rm -rf client
+
+# Copy built client
+COPY --from=build-stage /app/build ./client/build
+
+USER node
 
 CMD ["node", "server.js"]

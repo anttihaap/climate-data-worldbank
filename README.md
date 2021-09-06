@@ -42,7 +42,7 @@ Build image:
 
 Run image:
 
-`docker run -d -p 80:80 climate-data-worldbank`
+`docker run -d -p 80:8080 climate-data-worldbank`
 
 App port can be specified with `PORT` env variable.
 
