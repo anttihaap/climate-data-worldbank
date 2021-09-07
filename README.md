@@ -49,3 +49,5 @@ App port can be specified with `PORT` env variable.
 #### Deployment pipeline to Heroku
 
 Deployments are done automaticly to Heroku from `master` branch. See [heroku-deployment.yml](.github/workflows/heroku-deployment.yml).
+
+Url: https://docker-course-3150912150125941.herokuapp.com/
